@@ -1,0 +1,18 @@
+<p><b> Courses Taken </b></p>
+<% @usercourses.each do |f| %>
+	<div class="control-group">
+	  <div class="controls">
+	    <p><div><%= best_in_place f, :department %> <%= best_in_place f, :num %> <%= best_in_place f, :credits %></div></p>
+	  </div>
+	</div>
+<% end %>
+<%= form_for(@usercatalog) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="field input-small">
+    <%= f.text_field :department, placeholder: "ANTH" %>
+    <%= f.text_field :num, placeholder: "300" %>
+    <%= f.text_field :credits, placeholder: "3"%>
+  </div>
+  
+  <%= f.submit "Add", class: "btn btn-large btn-primary" %>
+<% end %>

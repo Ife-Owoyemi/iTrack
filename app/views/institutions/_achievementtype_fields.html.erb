@@ -1,0 +1,11 @@
+<div class="fields" >
+	<p>
+    	<%= f.label :achievementtype, "Achievement Type" %><br />
+  		<%= f.link_to_remove "Remove this Achievement Type" %><br />
+  		<%= f.text_field :achievementtype %><br />  
+	</p>
+	<%= f.fields_for :college do |college| %>
+  		<%= render 'college_fields', :f => college %>		
+	<% end %>
+	<p><%= link_to_add_fields "Add College", f, :colleges %></p>
+</div>

@@ -1,0 +1,18 @@
+<header class="navbar navbar-fixed-top navbar-inverse">
+  <div class="navbar-inner ">
+    <div class="container">  
+    <a href= "/" class = "brand" >iSwitched</a>
+      <nav>
+        <% if signed_in? %>
+          <%= render "layouts/usernavbar1" %>
+        <% else %>
+        <div class="nav pull-right" %>
+          <li><%= link_to "Home",    root_path %></li>
+          <li><%= link_to "Help",    help_path %></li>
+          <li><%= link_to "Sign in", signin_path %></li>
+        </div>
+        <% end %>
+      </nav>
+    </div>
+  </div>
+</header>

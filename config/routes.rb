@@ -1,9 +1,40 @@
 ISwitched1::Application.routes.draw do
+  get "pages/majorsba" 
+  get "pages/majorsbas"
+  get "pages/majorsbs"
+  get "pages/minors"    
+  get "pages/coursecatalog"
+  get "users/usercatalogform"
+  match 'usercatalogform', :to => 'users#usercatalogform'
+  match '/minors', :to => 'pages#minors'  
+  match '/majorsba', :to => 'pages#majorsba'  
+  match '/majorsbas', :to => 'pages#majorsbas'
+  match '/majorsbs', :to => 'pages#majorsbs'
+  match '/coursecatalog', :to => 'pages#coursecatalog'
+  get "users/new"
+  get "static_pages/home"
+  get "static_pages/help"
+  get "static_pages/about"
+  root to: 'static_pages#home'
+  match '/signup', to: 'users#new'
+  match '/signin', to: 'sessions#new'
+  match 'signout', to: 'sessions#destroy', via: :delete
+  match '/help', to: 'static_pages#help'
+  match '/about', to: 'static_pages#about'
+  match '/contact', to: 'static_pages#contact'
+  resources :users do
+    resources :usercatlogs
+    member do
+      get :following, :followers
+    end
+  end
+  resources :catalogs
   resources :courses
-
-
-  resources :users
-
+  resources :sessions,      only: [:new, :create, :destroy]
+  resources :microposts,    only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
+  resources :usercatalogs  
+  resources :institutions
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

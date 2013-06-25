@@ -1,0 +1,16 @@
+<li>
+  <%= gravatar_for user, size: 52 %>
+  <%= link_to user.name, user %>
+  
+  <% if current_user.admin? && !current_user?(user) %>
+  	| <%= link_to "delete", user, method: :delete,
+  								data: { confirm: "You sure?" } %>
+  	<%= form_for(user) do |f| %>
+      <%= f.label :admin %>
+      <%= f.check_box :admin %>
+
+      <%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
+    <% end %>
+    <p>I am an admin</p>
+  <% end %>
+</li>

@@ -1,0 +1,12 @@
+<% name = {"2014" => "Senior", "2015" => "Junior", "2016" => "Sophomore", "2017" => "Freshman"} %>
+<a href="<%= user_path(current_user) %>">
+  <%= gravatar_for current_user, size: 52 %>
+</a>
+<h1><%= current_user.name %></h1>
+<p><b>College: </b><%= current_user.college %></p>
+<p><b>Year: </b><%= name[current_user.gradyear.to_s] %> </p>
+<p><b>Major: </b></p>
+<span><%= link_to "view my profile", current_user %></span>
+<span>
+  <%= pluralize(current_user.microposts.count, "micropost") %>
+</span>

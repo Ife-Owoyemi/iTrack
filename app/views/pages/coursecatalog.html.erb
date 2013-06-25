@@ -1,0 +1,82 @@
+<% schools = {"School_of_Natural_Sciences" => "Natural Sciences","School_of_Engineering" => "Engineering","School_of_Humanities" => "Humanities", "School_of_Social_Sciences" => "Social Sciences", "Jones_School_of_Business" => "Business"  ,"School_of_Continuing_Studies" => "Continuing Studies",  "Dean_of_Undergraduates" => "Other" } %>
+<% ch = Hash.new %>
+<% @courses.each do |c| %>
+	<% if !ch.has_key?(c[:college])  %>
+		<% ch[c[:college]] = Hash.new %>
+	<% end %>
+	<% if !ch[c[:college]].has_key?(c[:department]) %>
+		<% ch[c[:college]][c[:department]] = Hash.new %>
+		
+	<% end %>
+	<% ch[c[:college]][c[:department]][c[:num]] = { :name => c[:name], :id => c[:id]}%>
+<% end %>
+<% if signed_in? %>
+	<h1>Course Catalog 2.0</h1>
+	<hr width="100%">
+	<form class="navbar-search pull-left">
+  		<input type="text" class="search-query" placeholder="Search">
+	</form>
+	<hr width="100%">
+ 	<ul class="nav nav-tabs">
+  		<% i = 0 %>
+  		<% schools.each_key do |college| %>
+    		<li><a href="#<%= i %>" data-toggle="tab"><%= schools[college.to_s] %></a></li>
+    		<% i += 1 %>
+    	<% end %>
+  	</ul>
+  	<div class="tab-content">
+    	<% i = 0 %>
+    	<% schools.each_key do |college| %>
+    		<div class="tab-pane" id="<%= i %>">
+    			<% k = 0 ;%> 
+    			<div class="accordion span10 pull-left" id="accordian<%= i %>">                                    
+    				<% ch[college].each_key do |department| %>	
+  		  				<div class="accordion-group">
+      						<div class="accordion-heading">
+       	 						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordian<%= i %>" href="#collapse<%= i %><%= k %>">
+          						<%= department.to_s %>
+      	 						</a>
+      						</div>
+      						<div id="collapse<%= i %><%= k %>"  class="accordion-body collapse">
+        						<div class="accordion-inner" >
+        							<% l = 0 %>
+        							<div class="accordion span7 pull-left" id="accordian<%= i %><%= k%>">               
+        								<% ch[college][department].each_key do |classnum| %>	
+  		  									<div class="accordion-group">
+      											<div class="accordion-heading">
+       	 											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordian<%= i %><%= k %>" href="#collapse<%= i %><%= k %><%= l %>">
+          											<%= department.to_s + " " + classnum.to_s%>: <%= ch[college][department][classnum][:name] %>
+      	 											</a>
+      											</div>
+      											<div id="collapse<%= i %><%= k %><%= l %>"  class="accordion-body collapse">
+        											<div class="accordion-inner" >
+           											<% @course = Catalog.find(ch[college][department][classnum][:id]) %>
+        												<% if !current_user.admin? %>
+	        												<p><b>Department: </b><%= best_in_place @course, :department %></p>
+	        												<p><b>Course Number: </b><%= best_in_place @course, :num %></p>
+	        												<p><b>Course Name: </b><%= best_in_place @course, :name %></p>
+	        												<p><b>Brief: </b><%= best_in_place @course, :brief %></p>
+	        												<p><b>Credits: </b><%= best_in_place @course, :credits %></p>
+	        											<% else %>	        												
+	        												<p><b>Brief: </b><%= @course.brief %></p>
+	        												<p><b>Credits: </b><%= @course.credits %></p>
+	        											<% end %>
+	      	  										</div>
+				    	  						</div>
+    										</div>
+    										<% l += 1 %>
+    									<% end %>
+    								</div>
+	      	  					</div>
+    	  					</div>
+    					</div>
+    					<% k +=1 %>
+    				<% end %>
+    			</div>
+    		</div>
+    		<% i += 1 %>
+    	<% end %>
+  	</div>
+<% else %>
+  <%= render 'shared/signup' %>
+<% end %> 

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  optionname: MyString
+  opreq_id: 1
+  hgoal: 1
+  cgoal: 1
+
+two:
+  optionname: MyString
+  opreq_id: 1
+  hgoal: 1
+  cgoal: 1

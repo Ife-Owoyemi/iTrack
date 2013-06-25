@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  college: MyString
+  achievementtype_id: 1
+
+two:
+  college: MyString
+  achievementtype_id: 1

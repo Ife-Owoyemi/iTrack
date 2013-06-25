@@ -1,0 +1,180 @@
+<% if signed_in? %>
+  <% @bafield = ["Humanities", "Social Sciences", "Natural Sciences", "Engineering"] %>
+  <h1>Majors BA_S</h1>
+  <hr width="100%">
+  <% user_courses = Hash.new %>
+  <% @usercatalogs.each do |c| %>
+        <% @course = current_user.usercatalogs.find(c[:id]) %>
+        <% if !user_courses.has_key?(c[:department]) %>
+          <% user_courses[c[:department]] = Hash.new %>
+          <% user_courses[c[:department]][c[:num]] = Hash.new %>
+          <% user_courses[c[:department]][c[:num]] = c[:credit] %>
+        <% else %>
+          <% user_courses[c[:department]][c[:num]] = Hash.new %>
+          <% user_courses[c[:department]][c[:num]] = c[:credit] %>
+        <% end %>
+  <% end %>
+  <ul class="nav nav-tabs">
+    <% i = 0 %>
+    <% b = @majorsbas.colleges.all %>
+    <% for college in b %> 
+      <li><a href="#<%= i %>" data-toggle="tab"><%= college.college %></a></li>
+      <% i += 1 %>
+    <% end %>
+  </ul>
+  <div class="tab-content">
+    <% i = 0 %>
+    <% for college in b %>
+      <div class="tab-pane" id="<%= i %>">
+        <% k = 0 ;%> 
+        <% c = college.achievementnames.all %>                                              
+        <% for achievementname in c %>
+        <div class="accordion span7 pull-left" id="accordian<%= i %>">      
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordian<%= i %>" href="#collapse<%= i %><%= k %>">
+                  <%= achievementname.achievementname %>
+                </a>
+              </div>
+              <div id="collapse<%= i %><%= k %>"  class="accordion-body collapse">
+                <div class="accordion-inner" >
+
+                  <% m = 0 %> 
+                  <% total = 0 %>
+                  <% core_completed = 0 %>
+                  <% option_completed = 0 %>
+                  <% ex = achievementname.specialties.all %>
+                  <% for specialty in ex %>
+                    <% d = specialty.corereqs.all %> 
+                    <% totalc = 0 %>
+                    <% totalh = 0 %>
+                    <% core_c = 0 %>
+                    <% core_h = 0 %>
+                    <% for corereq in d %>
+                      <% totalc += corereq.cgoal.to_i %>
+                      <% totalh += corereq.hgoal %>
+                      <% e = corereq.ccourses.all %>
+                      <% for course in e %>
+
+                        <% if user_courses.has_key?(course.department) %>
+
+                          <% if user_courses[course.department].has_key?(course.num) %>
+                            <% core_c += 1 %>
+                            <%# core_h += user_courses[course.department][course.num] %>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                    
+                    <% if totalc != 0 %>
+                      <% core_completed = (core_c * 100) / totalc %>    
+                    <% else %>
+                      <% core_completed = 0 %>
+                    <% end %>
+                    <% f = specialty.opreqs.all %>
+                    <%# totalc = 0 %>
+                    <%# totalh = 0 %>
+                    <% op_c = 0 %>
+                    <% for opreq in f %> 
+                      <% g = opreq.options.all %>
+                        <% op_c_big = 0 %>
+                          <% op_h_big = 0 %>
+                          <% op_c_biggest = 0 %>
+                      <% for option in g %> 
+                        <% h = option.ocourses.all %> 
+                        <% op_c_all = 0 %>
+                        <% op_c_m = 0 %>
+                        <% for course in h %>
+                          <% op_c_all += 1 %>
+                          <% if user_courses.has_key?(course.department) %>
+                            <% if user_courses[course.department].has_key?(course.num) %>
+                              <% op_c_m += 1 %>
+                              <%# op_h += user_courses[course.department][course.num] %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                        <% if op_c_all != 0 %>
+                          <% if op_c_m / op_c_all >= op_c_biggest %>
+                            <% op_c_big = op_c_m %>
+                            <% op_add = option.cgoal.to_i %>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                      <% op_c += op_c_m %>
+                      <% totalc += op_c_all  %>
+                    <% end  %>
+                    
+                    <%# if op_c_all > 0 %>
+                      <%# option_completed = (op_c*100) / totalc %>    
+                    <%# else %>
+                      <%# option_completed = 0 %>
+                    <%# end %>
+                    <% if totalc != 0 %>
+                      <% total =   ((core_c + op_c)*100)  / totalc %> 
+                    <% else %>
+                      <% total = 0 %>
+                    <% end %>
+                    <div class="accordion span6 pull-left" id="accordian<%= i %><%= k %>">                        
+                      <div class="accordion-group">
+                        <div class="accordion-heading">
+                          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordian<%= i %><%= k %>" href="#collapse<%= i %><%= k %><%= m %>">
+                            <%= specialty.specialty %>
+                          </a>
+                        </div>
+                        <div id="collapse<%= i %><%= k %><%= m %>"  class="accordion-body collapse">
+                          <div class="accordion-inner" >
+                            <p><b>Percent Complete: </b><%= total %>%<%#content goes here position[:reason]%></p>
+                            <div class="progress">
+                              <div class="bar bar-success" style="width: <%= total %>%;"></div>
+                            </div>
+                            <% d = specialty.corereqs.all %>
+                            <h4>Core Requirements</h4>
+                            <% for corereq in d %>
+                            <b><%= corereq.corereqname %></b>
+                            <ul>
+                              <% e = corereq.ccourses.all %>
+                              <li>
+                              <% for course in e %>
+                                <%= course.department + " " + course.num.to_s %>, 
+                              <% end %>
+                              </li>
+                            </ul>
+                            <% end %>
+                            <% f = specialty.opreqs.all %>
+                            <h4>Multi Option Requirements</h4>
+                            <% for opreq in f %>
+                              <b><%= opreq.opreqname %></b><br />
+                              <ul>
+                              <% g = opreq.options.all %>
+                              <% for option in g %>
+                                <b><%= option.optionname %></b><br/>
+                                <% h = option.ocourses.all %>
+                                <li>
+                                  <% for course in h %>
+                                    <%= course.department + " " + course.num.to_s %>, 
+                                  <% end %>
+                                </li>
+                              <% end %>
+                            </ul>
+                            <% end %>
+                           
+                          </div>
+                        </div>
+                      </div>
+                    
+                    <% m += 1 %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% k +=1 %>
+        <% end %>
+      </div>
+      <% i += 1 %>
+    <% end %>
+  </div>
+<% else %>
+  <%= render 'shared/signup' %>
+<% end %> 

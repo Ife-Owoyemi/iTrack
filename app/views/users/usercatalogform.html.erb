@@ -1,0 +1,29 @@
+
+<h1>Update your Courses</h1>
+
+<div class="row">
+  <div class="span6 offset3">
+	<%#= nested_form_for current_user.usercatalogs.each do |f| %>
+	<%= nested_form_for @usercatalogs.each do |c| %>
+      <% f = current_user.usercatalogs.find(c[:id]) %>
+	  <%= f.label :department %>
+	  <%= f.text_field(:department) %><br />
+	  <%= f.label :num %>
+	  <%= f.text_field(:num) %><br />
+	  <%= f.label :credits %>
+	  <%= f.text_field(:credits) %><br />
+	  <%= f.link_to_remove "Remove this Achievement Type" %>
+	<%= f.submit %>
+	<% end %>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+

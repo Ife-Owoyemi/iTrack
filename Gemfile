@@ -12,10 +12,15 @@ gem "nested_form", :git => 'https://github.com/ryanb/nested_form.git'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
 
 group :development do
   gem 'annotate', '2.5.0'
+  gem 'thin'
+end
+
+group :production do
+  gem 'annotate', '2.5.0'
+  gem 'thin'
 end
 
 gem 'bcrypt-ruby', '3.0.1'
@@ -35,6 +40,7 @@ end
 group :test do
 	gem 'cucumber-rails', '1.2.1', :require => false
 	gem 'database_cleaner', '0.7.0'
+	gem 'sqlite3'
 end
 
 

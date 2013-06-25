@@ -21,6 +21,7 @@ end
 group :production do
   gem 'annotate', '2.5.0'
   gem 'thin'
+  gem 'pg'
 end
 
 gem 'bcrypt-ruby', '3.0.1'

@@ -11,13 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130620123638) do
+ActiveRecord::Schema.define(:version => 20130626020645) do
 
   create_table "achievementnames", :force => true do |t|
     t.string   "achievementname"
     t.integer  "college_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "hourreq"
   end
 
   create_table "achievementtypes", :force => true do |t|
@@ -37,6 +38,10 @@ ActiveRecord::Schema.define(:version => 20130620123638) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "name"
+    t.integer  "offered_id"
+    t.boolean  "di"
+    t.boolean  "dii"
+    t.boolean  "diii"
   end
 
   create_table "ccourses", :force => true do |t|
@@ -75,6 +80,7 @@ ActiveRecord::Schema.define(:version => 20130620123638) do
     t.string   "nickname"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "catalog_id"
   end
 
   create_table "microposts", :force => true do |t|
@@ -88,6 +94,14 @@ ActiveRecord::Schema.define(:version => 20130620123638) do
     t.string   "department"
     t.integer  "option_id"
     t.integer  "num"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "offereds", :force => true do |t|
+    t.string   "semester"
+    t.integer  "year"
+    t.string   "professor"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -130,9 +144,14 @@ ActiveRecord::Schema.define(:version => 20130620123638) do
     t.string   "department"
     t.integer  "num"
     t.integer  "credits"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "user_id"
+    t.boolean  "taken"
+    t.boolean  "taking"
+    t.boolean  "willTake"
+    t.string   "institution"
+    t.string   "dreamJob"
   end
 
   create_table "users", :force => true do |t|
@@ -147,6 +166,7 @@ ActiveRecord::Schema.define(:version => 20130620123638) do
     t.string   "majors"
     t.integer  "gradyear"
     t.string   "minors"
+    t.integer  "institution_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
